@@ -15,13 +15,13 @@
 //Define Variables
 AudioAnalyzeNoteFrequency notefreq;
 AudioInputAnalog          adc1(A2);
-
 AudioMixer4               mixer;
 AudioOutputUSB            usb1;
 
 //---------------------------------------------------------------------------------------
 AudioConnection patchCord0(adc1, 0, notefreq, 0);
 AudioConnection patchCord1(adc1, 0, usb1, 0 );
+
 
 
 int channel = 1; // Defines the MIDI channel to send messages on (values from 1-16)
@@ -41,7 +41,7 @@ void setup() {
  AudioMemory(30);
  notefreq.begin(.15);
 
- analog
+
  //usbMIDI.begin(1);
 
  // Pitch detection: gets pitch frequencies and outputs the
@@ -74,24 +74,34 @@ void loop() {
   //get the pitch value   
     int index = n.getPitch();
   //see how far off pitch the value is
-    double distance = n.getDistance();
+   // double distance = n.getDistance();
 
   // get the closest note value
     note_name closest_note = *pitch_names[index];
 
-
+  // converted note frequency
+  float i = (index-48)/12.0;
+  float s = pow(2.0, i);
+  float newFreq = s*440.0;
 
 
    //Check if note is valid
    
    Serial.printf("Note: %3.2f | Probability: %.2f \n", note, prob);
-   Serial.printf("Closest Midi Note: %i\n",noteValue);
+   Serial.printf("Midi Note: %i\n",noteValue);
    Serial.printf("closest tuned note %c , %c\n", closest_note.getName(), closest_note.getModifier());
 
      // Send correct note to through the midi channel
-  usbMIDI.sendNoteOn(noteValue,velocity,channel);   // Turn the note ON
-  delay (40);
-  usbMIDI.sendNoteOff(noteValue,velocity,channel);  // Turn the note OFF
+  //usbMIDI.sendNoteOn(noteValue,velocity,channel);   // Turn the note ON
+  //delay (40);
+  //usbMIDI.sendNoteOff(noteValue,velocity,channel);  // Turn the note OFF
+  Serial.printf("index: %i \n", index);
+  Serial.printf("i: %3.2f \n", i);
+  Serial.printf("s: %3.2f \n", s);
+  Serial.printf("converted: %3.2f \n", newFreq);
+  tone(8, newFreq, 100);
+
+  
  }
  
 }
