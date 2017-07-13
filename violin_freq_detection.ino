@@ -41,6 +41,17 @@ void setup() {
  AudioMemory(30);
  notefreq.begin(.15);
 
+ pinMode(1, OUTPUT);
+ pinMode(2, OUTPUT);
+ pinMode(3, OUTPUT);
+ pinMode(4, OUTPUT);
+ pinMode(6, OUTPUT);
+ pinMode(7, OUTPUT);
+ pinMode(9, OUTPUT);
+ pinMode(10, OUTPUT);
+  pinMode(5, OUTPUT);
+ 
+ 
 
  //usbMIDI.begin(1);
 
@@ -56,6 +67,89 @@ void setup() {
 void loop() {
   //Add Delay to not get a million values
   delay(100);
+
+//**********************************************************
+  //tested code without violin 
+  //move back down to where it says 
+
+
+  float displacement = 5;
+  float cents = 0;
+  Serial.printf("cents = %3.2f", cents);
+ 
+  
+  //digitalWrite(5, HIGH);
+
+  if (cents < 10){
+    // they are hitting the right note or close enough
+    //turn green led on
+    digitalWrite(5, HIGH);
+    Serial.printf("high");
+ 
+  } else if ( displacement < 0) {
+    // they are below the note
+    //light up Red LEDS to the left of the Green LED
+
+    if (10 <= cents  && cents < 20){
+        digitalWrite(4, HIGH);
+    }
+
+    if (20 <= cents  && cents < 30){
+       digitalWrite(4, HIGH);
+       digitalWrite(3, HIGH);
+    }
+
+    if (30 <= cents  && cents < 40){
+       digitalWrite(4, HIGH);
+       digitalWrite(3, HIGH);
+       digitalWrite(2, HIGH);
+       
+    }
+
+    if (40 <= cents  && cents < 50){
+       digitalWrite(4, HIGH);
+       digitalWrite(3, HIGH);
+       digitalWrite(2, HIGH);
+       digitalWrite(1, HIGH);       
+    }
+    
+    
+  } else if ( displacement > 0) {
+    //they are above the note
+    //light up Red LEDS to the right of the Green LED
+    
+    if (10 <= cents  && cents < 20){
+       digitalWrite(6, HIGH);
+    }
+
+    if (20 <= cents  && cents < 30){
+       digitalWrite(6, HIGH);
+       digitalWrite(7, HIGH);
+    }
+
+    if (30 <= cents  && cents < 40){
+       digitalWrite(6, HIGH);
+       digitalWrite(7, HIGH);
+       digitalWrite(9, HIGH);
+    }
+
+    if (40 <= cents  && cents < 50){
+       digitalWrite(6, HIGH);
+       digitalWrite(7, HIGH);
+       digitalWrite(9, HIGH);
+       digitalWrite(10, HIGH);
+    }
+    
+  }
+
+
+
+//***********************************************************************
+  
+
+
+
+
   
   // put your main code here, to run repeatedly:
    if (notefreq.available()) {
@@ -99,7 +193,18 @@ void loop() {
   Serial.printf("i: %3.2f \n", i);
   Serial.printf("s: %3.2f \n", s);
   Serial.printf("converted: %3.2f \n", newFreq);
-  tone(8, newFreq, 100);
+  tone(8, newFreq, 200);
+
+  //Display that how off the person is USING LEDS
+
+  float displacement = note - newFreq;
+  float cents = 1200 * (log(newFreq/note)) / (log(2)); 
+  int direction;
+
+
+  //put cents here 
+    
+
 
   
  }
