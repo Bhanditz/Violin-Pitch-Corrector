@@ -73,74 +73,14 @@ void loop() {
   //move back down to where it says 
 
 
-  float displacement = 5;
-  float cents = 0;
-  Serial.printf("cents = %3.2f", cents);
+  //float displacement = 5;
+  //float cents = 10;
+  //Serial.printf("cents = %3.2f", cents);
  
   
   //digitalWrite(5, HIGH);
 
-  if (cents < 10){
-    // they are hitting the right note or close enough
-    //turn green led on
-    digitalWrite(5, HIGH);
-    Serial.printf("high");
- 
-  } else if ( displacement < 0) {
-    // they are below the note
-    //light up Red LEDS to the left of the Green LED
-
-    if (10 <= cents  && cents < 20){
-        digitalWrite(4, HIGH);
-    }
-
-    if (20 <= cents  && cents < 30){
-       digitalWrite(4, HIGH);
-       digitalWrite(3, HIGH);
-    }
-
-    if (30 <= cents  && cents < 40){
-       digitalWrite(4, HIGH);
-       digitalWrite(3, HIGH);
-       digitalWrite(2, HIGH);
-       
-    }
-
-    if (40 <= cents  && cents < 50){
-       digitalWrite(4, HIGH);
-       digitalWrite(3, HIGH);
-       digitalWrite(2, HIGH);
-       digitalWrite(1, HIGH);       
-    }
-    
-    
-  } else if ( displacement > 0) {
-    //they are above the note
-    //light up Red LEDS to the right of the Green LED
-    
-    if (10 <= cents  && cents < 20){
-       digitalWrite(6, HIGH);
-    }
-
-    if (20 <= cents  && cents < 30){
-       digitalWrite(6, HIGH);
-       digitalWrite(7, HIGH);
-    }
-
-    if (30 <= cents  && cents < 40){
-       digitalWrite(6, HIGH);
-       digitalWrite(7, HIGH);
-       digitalWrite(9, HIGH);
-    }
-
-    if (40 <= cents  && cents < 50){
-       digitalWrite(6, HIGH);
-       digitalWrite(7, HIGH);
-       digitalWrite(9, HIGH);
-       digitalWrite(10, HIGH);
-    }
-    
-  }
+  
 
 
 
@@ -186,27 +126,97 @@ void loop() {
    Serial.printf("closest tuned note %c , %c\n", closest_note.getName(), closest_note.getModifier());
 
      // Send correct note to through the midi channel
-  //usbMIDI.sendNoteOn(noteValue,velocity,channel);   // Turn the note ON
-  //delay (40);
-  //usbMIDI.sendNoteOff(noteValue,velocity,channel);  // Turn the note OFF
+  usbMIDI.sendNoteOn(noteValue,velocity,channel);   // Turn the note ON
+  usbMIDI.sendNoteOff(noteValue,velocity,channel);  // Turn the note OFF
   Serial.printf("index: %i \n", index);
   Serial.printf("i: %3.2f \n", i);
   Serial.printf("s: %3.2f \n", s);
   Serial.printf("converted: %3.2f \n", newFreq);
-  tone(8, newFreq, 200);
+  tone(8, newFreq, 300);
 
   //Display that how off the person is USING LEDS
+
+  Default_LED_Off();
 
   float displacement = note - newFreq;
   float cents = 1200 * (log(newFreq/note)) / (log(2)); 
   int direction;
 
-
+  Serial.printf("Displacement: %3.2f \n", displacement);
+  Serial.printf("Cents: %3.2f \n", cents);
   //put cents here 
+
+  if (cents <= 10 && cents >= -10){
+    // they are hitting the right note or close enough
+    //turn green led on
+    digitalWrite(5, HIGH);
+    Serial.printf("high");
+ 
+  }
+  
+    else if (-20 <= cents  && cents < -10){
+        digitalWrite(4, HIGH);
+    }
+
+    else if (-30 <= cents  && cents < -20){
+       digitalWrite(4, HIGH);
+       digitalWrite(3, HIGH);
+    }
+
+    else if (-40 <= cents  && cents < -30){
+       digitalWrite(4, HIGH);
+       digitalWrite(3, HIGH);
+       digitalWrite(2, HIGH);
+       
+    }
+
+    else if (-50 <= cents  && cents < -40){
+       digitalWrite(4, HIGH);
+       digitalWrite(3, HIGH);
+       digitalWrite(2, HIGH);
+       digitalWrite(1, HIGH);       
+    }
+    
+
+    
+    else if (10 <= cents  && cents < 20){
+       digitalWrite(6, HIGH);
+    }
+
+    else if (20 <= cents  && cents < 30){
+       digitalWrite(6, HIGH);
+       digitalWrite(7, HIGH);
+    }
+
+    else if (30 <= cents  && cents < 40){
+       digitalWrite(6, HIGH);
+       digitalWrite(7, HIGH);
+       digitalWrite(9, HIGH);
+    }
+
+    else if (40 <= cents  && cents < 50){
+       digitalWrite(6, HIGH);
+       digitalWrite(7, HIGH);
+       digitalWrite(9, HIGH);
+       digitalWrite(10, HIGH);
+    }
     
 
 
   
  }
- 
 }
+
+
+void Default_LED_Off(){
+       digitalWrite(10, LOW);
+       digitalWrite(9, LOW);
+       digitalWrite(7, LOW);
+       digitalWrite(6, LOW); 
+       digitalWrite(5, LOW);
+       digitalWrite(4, LOW);
+       digitalWrite(3, LOW);
+       digitalWrite(2, LOW);
+       digitalWrite(1, LOW); 
+}
+
